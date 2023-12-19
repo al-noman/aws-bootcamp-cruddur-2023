@@ -1,18 +1,24 @@
 version: "3.8"
 services:
   backend-flask:
+    image: python:3.10-slim-buster
+    working_dir: /backend-flask
+    command: sh -c "pip3 install -r requirements.txt && python3 -m flask run --host=0.0.0.0 --port=4567"
     environment:
+      FLASK_ENV: development
       FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-    build: ./backend-flask
     ports:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
+    image: node:16.18
+    working_dir: /frontend-react-js
+    command: sh -c "npm install && npm start"
     environment:
+      PORT: 3000
       REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-    build: ./frontend-react-js
     ports:
       - "3000:3000"
     volumes:
